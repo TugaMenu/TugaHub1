@@ -1058,7 +1058,7 @@ function RayfieldLibrary:Notify(data) -- action e.g open messages
 
 		if data.Actions then
 			warn('Rayfield | Not seeing your actions in notifications?')
-			print("Notification Actions are being sunset for now, keep up to date on when they're back in the discord. (sirius.menu/discord)")
+			print("Notification Actions are being sunset for now, keep up to date on when they're back in the discord. (https://discord.gg/CSmYvPWH82)")
 		end
 
 		-- Calculate textbounds and set initial values
@@ -1675,7 +1675,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 				task.wait(math.random(180, 600))
 				RayfieldLibrary:Notify({
 					Title = "TugaHub Interface",
-					Content = "Enjoying this UI library? Find it at sirius.menu/discord",
+					Content = "Enjoying this UI library? Find it at https://discord.gg/CSmYvPWH82/",
 					Duration = 7,
 					Image = 4370033185,
 				})

@@ -637,28 +637,6 @@ local function CreateMainGUI(config)
         
         return btn
     end
-
-    -- Toggle do HUB pra abrir/fechar com a tecla definida
-do
-    local UserInputService = game:GetService("UserInputService")
-
-    UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if gameProcessed then return end
-
-        if input.KeyCode == TugaHub.Settings.ToggleKey then
-            -- Se a Janela Principal estiver visível, alterna a visibilidade
-            if Main then
-                Main.Visible = not Main.Visible
-            end
-
-            -- Também alterna o MiniUI
-            if MiniUI then
-                MiniUI.Visible = not MiniUI.Visible
-            end
-        end
-    end)
-end
-
     
     local MiniUI = CreateMinimizedUI(ScreenGui, Main)
     

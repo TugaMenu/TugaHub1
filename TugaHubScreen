@@ -613,7 +613,6 @@ local function CreateMainGUI(config)
     
     local function CreateControlBtn(icon, callback)
         local btn = Instance.new("TextButton")
-        btn.Size = UD
         btn.Size = UDim2.new(0, 32, 0, 32)
         btn.BackgroundColor3 = CurrentTheme.Sidebar
         btn.BorderSizePixel = 0
@@ -638,6 +637,22 @@ local function CreateMainGUI(config)
         
         return btn
     end
+    
+    local MiniUI = CreateMinimizedUI(ScreenGui, Main)
+    
+    local ConfigBtn = CreateControlBtn("⚙", function()
+        local ConfigPanel = Main:FindFirstChild("ConfigPanel")
+        if ConfigPanel then
+            if ConfigPanel.Visible then
+                Tween(ConfigPanel, {Size = UDim2.new(0, 0, 1, -58)}, 0.3)
+                task.wait(0.3)
+                ConfigPanel.Visible = false
+            else
+                ConfigPanel.Visible = true
+                Tween(ConfigPanel, {Size = UDim2.new(0, 280, 1, -58)}, 0.3, Enum.EasingStyle.Back)
+            end
+        end
+    end)
     
     local minimized = false
     local MinBtn = CreateControlBtn("−", function()

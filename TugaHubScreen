@@ -1113,4 +1113,46 @@ function TugaHub:CreateWindow(config)
     return Window
 end
 
+-- Toggle Key (abrir/fechar menu)
+local UIS = game:GetService("UserInputService")
+local toggleKey = Enum.KeyCode.RightShift
+local menuOpen = true
+
+local function ToggleMenu()
+    menuOpen = not menuOpen
+    if Window and Window.MainFrame then
+        Window.MainFrame.Visible = menuOpen
+    end
+end
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == toggleKey then
+        ToggleMenu()
+    end
+end)
+
+-- Mini botão para reabrir
+local miniButton = Instance.new("TextButton")
+miniButton.Size = UDim2.new(0, 150, 0, 40)
+miniButton.Position = UDim2.new(0, 10, 0.8, 0)
+miniButton.Text = "Abrir TugaHub"
+miniButton.BackgroundColor3 = Color3.fromRGB(215, 40, 40)
+miniButton.TextColor3 = Color3.new(1, 1, 1)
+miniButton.Visible = false
+miniButton.Parent = game:GetService("CoreGui")
+
+miniButton.MouseButton1Click:Connect(function()
+    ToggleMenu()
+end)
+
+-- Atualiza o mini botão automaticamente
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == toggleKey then
+        miniButton.Visible = not miniButton.Visible
+    end
+end)
+
+
 return TugaHub

@@ -575,6 +575,11 @@ function TugaHub:CreateWindow(config)
             Main.Visible = not Main.Visible
         end
     end)
+
+    -- FINAL DO CreateWindow
+    return Window
+end
+
 -- Create Tab
 function Window:CreateTab(name, icon)
     icon = icon or "📄"

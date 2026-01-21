@@ -286,17 +286,17 @@ end
 local function CreateConfigPanel(ScreenGui, Main, Window)
     local ConfigPanel = Instance.new("Frame")
     ConfigPanel.Name = "ConfigPanel"
-    ConfigPanel.Size = UDim2.new(0, 350, 1, -58)
-    ConfigPanel.Position = UDim2.new(1, -350, 0, 54)
+    ConfigPanel.Size = UDim2.new(0, 0, 1, -58)
+    ConfigPanel.Position = UDim2.new(1, 0, 0, 54)
     ConfigPanel.BackgroundColor3 = CurrentTheme.Surface
     ConfigPanel.BorderSizePixel = 0
     ConfigPanel.ClipsDescendants = true
     ConfigPanel.Visible = false
     ConfigPanel.Parent = Main
-
+    
     CreateCorner(ConfigPanel, 10)
     CreateStroke(ConfigPanel, CurrentTheme.Border, 1, 0.5)
-
+    
     local ConfigScroll = Instance.new("ScrollingFrame")
     ConfigScroll.Size = UDim2.new(1, -16, 1, -16)
     ConfigScroll.Position = UDim2.new(0, 8, 0, 8)
@@ -306,16 +306,16 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
     ConfigScroll.ScrollBarImageColor3 = CurrentTheme.Primary
     ConfigScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
     ConfigScroll.Parent = ConfigPanel
-
+    
     local ConfigLayout = Instance.new("UIListLayout")
     ConfigLayout.SortOrder = Enum.SortOrder.LayoutOrder
     ConfigLayout.Padding = UDim.new(0, 12)
     ConfigLayout.Parent = ConfigScroll
-
+    
     ConfigLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
         ConfigScroll.CanvasSize = UDim2.new(0, 0, 0, ConfigLayout.AbsoluteContentSize.Y + 16)
     end)
-
+    
     -- Config Title
     local ConfigTitle = Instance.new("TextLabel")
     ConfigTitle.Size = UDim2.new(1, 0, 0, 40)
@@ -325,7 +325,7 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
     ConfigTitle.TextSize = 18
     ConfigTitle.TextColor3 = CurrentTheme.Primary
     ConfigTitle.Parent = ConfigScroll
-
+    
     -- Theme Section
     local ThemeSection = Instance.new("TextLabel")
     ThemeSection.Size = UDim2.new(1, 0, 0, 30)
@@ -335,7 +335,7 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
     ThemeSection.TextSize = 14
     ThemeSection.TextColor3 = CurrentTheme.Accent
     ThemeSection.Parent = ConfigScroll
-
+    
     -- Theme Buttons
     local themes = {"Portugal", "Dark", "Light", "Ocean", "Sunset", "Forest"}
     for _, themeName in ipairs(themes) do
@@ -346,10 +346,10 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
         ThemeBtn.Text = ""
         ThemeBtn.AutoButtonColor = false
         ThemeBtn.Parent = ConfigScroll
-
+        
         CreateCorner(ThemeBtn, 8)
         CreateStroke(ThemeBtn, CurrentTheme.Border, 1, 0.5)
-
+        
         local ThemeLabel = Instance.new("TextLabel")
         ThemeLabel.Size = UDim2.new(1, -50, 1, 0)
         ThemeLabel.Position = UDim2.new(0, 12, 0, 0)
@@ -360,7 +360,7 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
         ThemeLabel.TextColor3 = CurrentTheme.Text
         ThemeLabel.TextXAlignment = Enum.TextXAlignment.Left
         ThemeLabel.Parent = ThemeBtn
-
+        
         local ThemePreview = Instance.new("Frame")
         ThemePreview.Size = UDim2.new(0, 30, 0, 30)
         ThemePreview.Position = UDim2.new(1, -38, 0.5, 0)
@@ -368,17 +368,17 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
         ThemePreview.BackgroundColor3 = TugaHub.Themes[themeName].Primary
         ThemePreview.BorderSizePixel = 0
         ThemePreview.Parent = ThemeBtn
-
+        
         CreateCorner(ThemePreview, 8)
-
+        
         ThemeBtn.MouseEnter:Connect(function()
             Tween(ThemeBtn, {BackgroundColor3 = CurrentTheme.Sidebar}, 0.2)
         end)
-
+        
         ThemeBtn.MouseLeave:Connect(function()
             Tween(ThemeBtn, {BackgroundColor3 = CurrentTheme.Background}, 0.2)
         end)
-
+        
         ThemeBtn.MouseButton1Click:Connect(function()
             CurrentTheme = TugaHub.Themes[themeName]
             Window:Notify({
@@ -388,7 +388,7 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
             })
         end)
     end
-
+    
     -- Keybind Section
     local KeySection = Instance.new("TextLabel")
     KeySection.Size = UDim2.new(1, 0, 0, 30)
@@ -398,14 +398,14 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
     KeySection.TextSize = 14
     KeySection.TextColor3 = CurrentTheme.Accent
     KeySection.Parent = ConfigScroll
-
+    
     -- Keybind Buttons
     local keys = {
         {name = "Shift Direito", key = Enum.KeyCode.RightShift},
         {name = "K", key = Enum.KeyCode.K},
         {name = "Ctrl Direito", key = Enum.KeyCode.RightControl}
     }
-
+    
     for _, keyData in ipairs(keys) do
         local KeyBtn = Instance.new("TextButton")
         KeyBtn.Size = UDim2.new(1, 0, 0, 45)
@@ -414,10 +414,10 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
         KeyBtn.Text = ""
         KeyBtn.AutoButtonColor = false
         KeyBtn.Parent = ConfigScroll
-
+        
         CreateCorner(KeyBtn, 8)
         CreateStroke(KeyBtn, CurrentTheme.Border, 1, 0.5)
-
+        
         local KeyLabel = Instance.new("TextLabel")
         KeyLabel.Size = UDim2.new(1, -50, 1, 0)
         KeyLabel.Position = UDim2.new(0, 12, 0, 0)
@@ -428,9 +428,8 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
         KeyLabel.TextColor3 = CurrentTheme.Text
         KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
         KeyLabel.Parent = KeyBtn
-
+        
         local KeyCheck = Instance.new("TextLabel")
-        KeyCheck.Name = "KeyCheck"
         KeyCheck.Size = UDim2.new(0, 30, 0, 30)
         KeyCheck.Position = UDim2.new(1, -38, 0.5, 0)
         KeyCheck.AnchorPoint = Vector2.new(0, 0.5)
@@ -441,31 +440,31 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
         KeyCheck.TextSize = 18
         KeyCheck.TextColor3 = CurrentTheme.Success
         KeyCheck.Parent = KeyBtn
-
+        
         CreateCorner(KeyCheck, 8)
-
+        
         KeyBtn.MouseEnter:Connect(function()
             Tween(KeyBtn, {BackgroundColor3 = CurrentTheme.Sidebar}, 0.2)
         end)
-
+        
         KeyBtn.MouseLeave:Connect(function()
             Tween(KeyBtn, {BackgroundColor3 = CurrentTheme.Background}, 0.2)
         end)
-
+        
         KeyBtn.MouseButton1Click:Connect(function()
             TugaHub.Settings.ToggleKey = keyData.key
-
+            
             for _, otherBtn in ipairs(ConfigScroll:GetChildren()) do
-                if otherBtn:IsA("TextButton") then
-                    local check = otherBtn:FindFirstChild("KeyCheck")
-                    if check then
+                if otherBtn:IsA("TextButton") and otherBtn:FindFirstChild("TextLabel") then
+                    local check = otherBtn:FindFirstChildOfClass("TextLabel")
+                    if check and check.Name ~= "TextLabel" then
                         check.Text = ""
                     end
                 end
             end
-
+            
             KeyCheck.Text = "✓"
-
+            
             Window:Notify({
                 Title = "Tecla Alterada",
                 Description = "Use " .. keyData.name .. " para abrir/fechar o hub",
@@ -473,7 +472,7 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
             })
         end)
     end
-
+    
     -- Credits
     local Credits = Instance.new("TextLabel")
     Credits.Size = UDim2.new(1, 0, 0, 60)
@@ -484,9 +483,9 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
     Credits.TextSize = 13
     Credits.TextColor3 = CurrentTheme.Primary
     Credits.Parent = ConfigScroll
-
+    
     CreateCorner(Credits, 8)
-
+    
     return ConfigPanel
 end
 
@@ -638,6 +637,28 @@ local function CreateMainGUI(config)
         
         return btn
     end
+
+    -- Toggle do HUB pra abrir/fechar com a tecla definida
+do
+    local UserInputService = game:GetService("UserInputService")
+
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == TugaHub.Settings.ToggleKey then
+            -- Se a Janela Principal estiver visível, alterna a visibilidade
+            if Main then
+                Main.Visible = not Main.Visible
+            end
+
+            -- Também alterna o MiniUI
+            if MiniUI then
+                MiniUI.Visible = not MiniUI.Visible
+            end
+        end
+    end)
+end
+
     
     local MiniUI = CreateMinimizedUI(ScreenGui, Main)
     

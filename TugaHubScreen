@@ -1,8 +1,7 @@
 --[[
-    TugaHub Interface v2.1
-    by Portuga_MTA
+    TugaHub Interface v2.5
     Portuguese Hub System
-    Modern & Clean Design
+    Advanced Features Edition
 ]]
 
 local TweenService = game:GetService("TweenService")
@@ -16,15 +15,13 @@ local HttpService = game:GetService("HttpService")
 local TugaHub = {
     Flags = {},
     Windows = {},
-    Version = "2.1.0",
-    Settings = {
-        ToggleKey = Enum.KeyCode.RightShift -- Padrão: Shift Direito
-    }
+    Version = "2.5.0"
 }
 
 -- Color Themes
 TugaHub.Themes = {
     Portugal = {
+        Name = "Portugal",
         Background = Color3.fromRGB(12, 18, 28),
         Surface = Color3.fromRGB(20, 28, 40),
         Sidebar = Color3.fromRGB(16, 22, 32),
@@ -39,6 +36,7 @@ TugaHub.Themes = {
         Error = Color3.fromRGB(231, 76, 60)
     },
     Dark = {
+        Name = "Escuro",
         Background = Color3.fromRGB(15, 15, 20),
         Surface = Color3.fromRGB(22, 22, 30),
         Sidebar = Color3.fromRGB(18, 18, 25),
@@ -53,6 +51,7 @@ TugaHub.Themes = {
         Error = Color3.fromRGB(240, 71, 71)
     },
     Light = {
+        Name = "Claro",
         Background = Color3.fromRGB(248, 249, 252),
         Surface = Color3.fromRGB(255, 255, 255),
         Sidebar = Color3.fromRGB(250, 251, 254),
@@ -67,46 +66,49 @@ TugaHub.Themes = {
         Error = Color3.fromRGB(240, 71, 71)
     },
     Ocean = {
-        Background = Color3.fromRGB(10, 25, 47),
-        Surface = Color3.fromRGB(17, 34, 64),
-        Sidebar = Color3.fromRGB(13, 28, 53),
-        Primary = Color3.fromRGB(52, 152, 219),
-        Secondary = Color3.fromRGB(41, 128, 185),
-        Accent = Color3.fromRGB(26, 188, 156),
-        Text = Color3.fromRGB(236, 240, 241),
-        TextDim = Color3.fromRGB(149, 165, 166),
-        Border = Color3.fromRGB(44, 62, 80),
-        Success = Color3.fromRGB(39, 174, 96),
-        Warning = Color3.fromRGB(243, 156, 18),
-        Error = Color3.fromRGB(231, 76, 60)
-    },
-    Sunset = {
-        Background = Color3.fromRGB(25, 20, 30),
-        Surface = Color3.fromRGB(35, 28, 45),
-        Sidebar = Color3.fromRGB(30, 24, 38),
-        Primary = Color3.fromRGB(255, 107, 107),
-        Secondary = Color3.fromRGB(255, 159, 64),
-        Accent = Color3.fromRGB(255, 195, 113),
-        Text = Color3.fromRGB(255, 250, 240),
-        TextDim = Color3.fromRGB(180, 160, 170),
-        Border = Color3.fromRGB(60, 50, 70),
-        Success = Color3.fromRGB(72, 219, 143),
-        Warning = Color3.fromRGB(255, 184, 77),
-        Error = Color3.fromRGB(255, 107, 107)
+        Name = "Oceano",
+        Background = Color3.fromRGB(8, 20, 35),
+        Surface = Color3.fromRGB(15, 30, 50),
+        Sidebar = Color3.fromRGB(12, 24, 42),
+        Primary = Color3.fromRGB(0, 150, 255),
+        Secondary = Color3.fromRGB(0, 100, 200),
+        Accent = Color3.fromRGB(0, 200, 255),
+        Text = Color3.fromRGB(230, 240, 255),
+        TextDim = Color3.fromRGB(120, 150, 180),
+        Border = Color3.fromRGB(30, 60, 90),
+        Success = Color3.fromRGB(0, 230, 150),
+        Warning = Color3.fromRGB(255, 180, 0),
+        Error = Color3.fromRGB(255, 80, 80)
     },
     Forest = {
-        Background = Color3.fromRGB(18, 25, 20),
-        Surface = Color3.fromRGB(25, 35, 28),
-        Sidebar = Color3.fromRGB(20, 30, 23),
-        Primary = Color3.fromRGB(76, 175, 80),
-        Secondary = Color3.fromRGB(139, 195, 74),
-        Accent = Color3.fromRGB(205, 220, 57),
-        Text = Color3.fromRGB(245, 245, 245),
-        TextDim = Color3.fromRGB(170, 180, 170),
-        Border = Color3.fromRGB(46, 64, 50),
-        Success = Color3.fromRGB(102, 187, 106),
-        Warning = Color3.fromRGB(255, 193, 7),
-        Error = Color3.fromRGB(239, 83, 80)
+        Name = "Floresta",
+        Background = Color3.fromRGB(10, 20, 10),
+        Surface = Color3.fromRGB(20, 35, 20),
+        Sidebar = Color3.fromRGB(15, 27, 15),
+        Primary = Color3.fromRGB(50, 205, 50),
+        Secondary = Color3.fromRGB(34, 139, 34),
+        Accent = Color3.fromRGB(124, 252, 0),
+        Text = Color3.fromRGB(240, 255, 240),
+        TextDim = Color3.fromRGB(144, 238, 144),
+        Border = Color3.fromRGB(40, 80, 40),
+        Success = Color3.fromRGB(0, 255, 0),
+        Warning = Color3.fromRGB(255, 215, 0),
+        Error = Color3.fromRGB(220, 20, 60)
+    },
+    Sunset = {
+        Name = "Pôr do Sol",
+        Background = Color3.fromRGB(20, 10, 15),
+        Surface = Color3.fromRGB(35, 20, 25),
+        Sidebar = Color3.fromRGB(27, 15, 20),
+        Primary = Color3.fromRGB(255, 99, 71),
+        Secondary = Color3.fromRGB(255, 69, 0),
+        Accent = Color3.fromRGB(255, 165, 0),
+        Text = Color3.fromRGB(255, 245, 238),
+        TextDim = Color3.fromRGB(205, 133, 63),
+        Border = Color3.fromRGB(80, 40, 50),
+        Success = Color3.fromRGB(50, 205, 50),
+        Warning = Color3.fromRGB(255, 215, 0),
+        Error = Color3.fromRGB(178, 34, 34)
     }
 }
 
@@ -190,305 +192,6 @@ local function MakeDraggable(frame, dragArea)
     end)
 end
 
--- Create Minimized UI
-local function CreateMinimizedUI(ScreenGui, Main)
-    local MiniUI = Instance.new("Frame")
-    MiniUI.Name = "MiniUI"
-    MiniUI.Size = UDim2.new(0, 200, 0, 60)
-    MiniUI.Position = UDim2.new(1, -210, 1, -70)
-    MiniUI.BackgroundColor3 = CurrentTheme.Surface
-    MiniUI.BorderSizePixel = 0
-    MiniUI.Visible = false
-    MiniUI.Parent = ScreenGui
-    
-    CreateCorner(MiniUI, 10)
-    CreateStroke(MiniUI, CurrentTheme.Primary, 2)
-    
-    local Shadow = Instance.new("ImageLabel")
-    Shadow.Name = "Shadow"
-    Shadow.Size = UDim2.new(1, 30, 1, 30)
-    Shadow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Shadow.AnchorPoint = Vector2.new(0.5, 0.5)
-    Shadow.BackgroundTransparency = 1
-    Shadow.Image = "rbxassetid://1316045217"
-    Shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-    Shadow.ImageTransparency = 0.7
-    Shadow.ScaleType = Enum.ScaleType.Slice
-    Shadow.SliceCenter = Rect.new(10, 10, 118, 118)
-    Shadow.ZIndex = -1
-    Shadow.Parent = MiniUI
-    
-    local MiniLogo = Instance.new("Frame")
-    MiniLogo.Size = UDim2.new(0, 40, 0, 40)
-    MiniLogo.Position = UDim2.new(0, 10, 0.5, 0)
-    MiniLogo.AnchorPoint = Vector2.new(0, 0.5)
-    MiniLogo.BackgroundColor3 = CurrentTheme.Primary
-    MiniLogo.BorderSizePixel = 0
-    MiniLogo.Parent = MiniUI
-    
-    CreateCorner(MiniLogo, 10)
-    
-    local MiniLogoText = Instance.new("TextLabel")
-    MiniLogoText.Size = UDim2.new(1, 0, 1, 0)
-    MiniLogoText.BackgroundTransparency = 1
-    MiniLogoText.Text = "T"
-    MiniLogoText.Font = Enum.Font.GothamBlack
-    MiniLogoText.TextSize = 22
-    MiniLogoText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    MiniLogoText.Parent = MiniLogo
-    
-    local MiniLabel = Instance.new("TextLabel")
-    MiniLabel.Size = UDim2.new(1, -100, 1, 0)
-    MiniLabel.Position = UDim2.new(0, 55, 0, 0)
-    MiniLabel.BackgroundTransparency = 1
-    MiniLabel.Text = "TugaHub"
-    MiniLabel.Font = Enum.Font.GothamBold
-    MiniLabel.TextSize = 14
-    MiniLabel.TextColor3 = CurrentTheme.Text
-    MiniLabel.TextXAlignment = Enum.TextXAlignment.Left
-    MiniLabel.Parent = MiniUI
-    
-    local MiniBtn = Instance.new("TextButton")
-    MiniBtn.Size = UDim2.new(0, 40, 0, 40)
-    MiniBtn.Position = UDim2.new(1, -50, 0.5, 0)
-    MiniBtn.AnchorPoint = Vector2.new(0, 0.5)
-    MiniBtn.BackgroundColor3 = CurrentTheme.Primary
-    MiniBtn.BorderSizePixel = 0
-    MiniBtn.Text = "▲"
-    MiniBtn.Font = Enum.Font.GothamBold
-    MiniBtn.TextSize = 16
-    MiniBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    MiniBtn.AutoButtonColor = false
-    MiniBtn.Parent = MiniUI
-    
-    CreateCorner(MiniBtn, 10)
-    
-    MiniBtn.MouseEnter:Connect(function()
-        Tween(MiniBtn, {BackgroundColor3 = CurrentTheme.Accent}, 0.2)
-    end)
-    
-    MiniBtn.MouseLeave:Connect(function()
-        Tween(MiniBtn, {BackgroundColor3 = CurrentTheme.Primary}, 0.2)
-    end)
-    
-    MiniBtn.MouseButton1Click:Connect(function()
-        MiniUI.Visible = false
-        Main.Visible = true
-        Tween(Main, {Size = UDim2.new(0, 680, 0, 480)}, 0.4, Enum.EasingStyle.Back)
-    end)
-    
-    MakeDraggable(MiniUI, MiniUI)
-    
-    return MiniUI
-end
-
--- Create Config Panel
-local function CreateConfigPanel(ScreenGui, Main, Window)
-    local ConfigPanel = Instance.new("Frame")
-    ConfigPanel.Name = "ConfigPanel"
-    ConfigPanel.Size = UDim2.new(0, 0, 1, -58)
-    ConfigPanel.Position = UDim2.new(1, 0, 0, 54)
-    ConfigPanel.BackgroundColor3 = CurrentTheme.Surface
-    ConfigPanel.BorderSizePixel = 0
-    ConfigPanel.ClipsDescendants = true
-    ConfigPanel.Visible = false
-    ConfigPanel.Parent = Main
-    
-    CreateCorner(ConfigPanel, 10)
-    CreateStroke(ConfigPanel, CurrentTheme.Border, 1, 0.5)
-    
-    local ConfigScroll = Instance.new("ScrollingFrame")
-    ConfigScroll.Size = UDim2.new(1, -16, 1, -16)
-    ConfigScroll.Position = UDim2.new(0, 8, 0, 8)
-    ConfigScroll.BackgroundTransparency = 1
-    ConfigScroll.BorderSizePixel = 0
-    ConfigScroll.ScrollBarThickness = 4
-    ConfigScroll.ScrollBarImageColor3 = CurrentTheme.Primary
-    ConfigScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-    ConfigScroll.Parent = ConfigPanel
-    
-    local ConfigLayout = Instance.new("UIListLayout")
-    ConfigLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ConfigLayout.Padding = UDim.new(0, 12)
-    ConfigLayout.Parent = ConfigScroll
-    
-    ConfigLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        ConfigScroll.CanvasSize = UDim2.new(0, 0, 0, ConfigLayout.AbsoluteContentSize.Y + 16)
-    end)
-    
-    -- Config Title
-    local ConfigTitle = Instance.new("TextLabel")
-    ConfigTitle.Size = UDim2.new(1, 0, 0, 40)
-    ConfigTitle.BackgroundTransparency = 1
-    ConfigTitle.Text = "⚙️ Configurações"
-    ConfigTitle.Font = Enum.Font.GothamBold
-    ConfigTitle.TextSize = 18
-    ConfigTitle.TextColor3 = CurrentTheme.Primary
-    ConfigTitle.Parent = ConfigScroll
-    
-    -- Theme Section
-    local ThemeSection = Instance.new("TextLabel")
-    ThemeSection.Size = UDim2.new(1, 0, 0, 30)
-    ThemeSection.BackgroundTransparency = 1
-    ThemeSection.Text = "━━ Temas ━━"
-    ThemeSection.Font = Enum.Font.GothamBold
-    ThemeSection.TextSize = 14
-    ThemeSection.TextColor3 = CurrentTheme.Accent
-    ThemeSection.Parent = ConfigScroll
-    
-    -- Theme Buttons
-    local themes = {"Portugal", "Dark", "Light", "Ocean", "Sunset", "Forest"}
-    for _, themeName in ipairs(themes) do
-        local ThemeBtn = Instance.new("TextButton")
-        ThemeBtn.Size = UDim2.new(1, 0, 0, 45)
-        ThemeBtn.BackgroundColor3 = CurrentTheme.Background
-        ThemeBtn.BorderSizePixel = 0
-        ThemeBtn.Text = ""
-        ThemeBtn.AutoButtonColor = false
-        ThemeBtn.Parent = ConfigScroll
-        
-        CreateCorner(ThemeBtn, 8)
-        CreateStroke(ThemeBtn, CurrentTheme.Border, 1, 0.5)
-        
-        local ThemeLabel = Instance.new("TextLabel")
-        ThemeLabel.Size = UDim2.new(1, -50, 1, 0)
-        ThemeLabel.Position = UDim2.new(0, 12, 0, 0)
-        ThemeLabel.BackgroundTransparency = 1
-        ThemeLabel.Text = themeName
-        ThemeLabel.Font = Enum.Font.GothamSemibold
-        ThemeLabel.TextSize = 14
-        ThemeLabel.TextColor3 = CurrentTheme.Text
-        ThemeLabel.TextXAlignment = Enum.TextXAlignment.Left
-        ThemeLabel.Parent = ThemeBtn
-        
-        local ThemePreview = Instance.new("Frame")
-        ThemePreview.Size = UDim2.new(0, 30, 0, 30)
-        ThemePreview.Position = UDim2.new(1, -38, 0.5, 0)
-        ThemePreview.AnchorPoint = Vector2.new(0, 0.5)
-        ThemePreview.BackgroundColor3 = TugaHub.Themes[themeName].Primary
-        ThemePreview.BorderSizePixel = 0
-        ThemePreview.Parent = ThemeBtn
-        
-        CreateCorner(ThemePreview, 8)
-        
-        ThemeBtn.MouseEnter:Connect(function()
-            Tween(ThemeBtn, {BackgroundColor3 = CurrentTheme.Sidebar}, 0.2)
-        end)
-        
-        ThemeBtn.MouseLeave:Connect(function()
-            Tween(ThemeBtn, {BackgroundColor3 = CurrentTheme.Background}, 0.2)
-        end)
-        
-        ThemeBtn.MouseButton1Click:Connect(function()
-            CurrentTheme = TugaHub.Themes[themeName]
-            Window:Notify({
-                Title = "Tema Alterado",
-                Description = "Tema " .. themeName .. " aplicado! Reabra o hub para ver as mudanças.",
-                Duration = 3
-            })
-        end)
-    end
-    
-    -- Keybind Section
-    local KeySection = Instance.new("TextLabel")
-    KeySection.Size = UDim2.new(1, 0, 0, 30)
-    KeySection.BackgroundTransparency = 1
-    KeySection.Text = "━━ Tecla de Atalho ━━"
-    KeySection.Font = Enum.Font.GothamBold
-    KeySection.TextSize = 14
-    KeySection.TextColor3 = CurrentTheme.Accent
-    KeySection.Parent = ConfigScroll
-    
-    -- Keybind Buttons
-    local keys = {
-        {name = "Shift Direito", key = Enum.KeyCode.RightShift},
-        {name = "K", key = Enum.KeyCode.K},
-        {name = "Ctrl Direito", key = Enum.KeyCode.RightControl}
-    }
-    
-    for _, keyData in ipairs(keys) do
-        local KeyBtn = Instance.new("TextButton")
-        KeyBtn.Size = UDim2.new(1, 0, 0, 45)
-        KeyBtn.BackgroundColor3 = CurrentTheme.Background
-        KeyBtn.BorderSizePixel = 0
-        KeyBtn.Text = ""
-        KeyBtn.AutoButtonColor = false
-        KeyBtn.Parent = ConfigScroll
-        
-        CreateCorner(KeyBtn, 8)
-        CreateStroke(KeyBtn, CurrentTheme.Border, 1, 0.5)
-        
-        local KeyLabel = Instance.new("TextLabel")
-        KeyLabel.Size = UDim2.new(1, -50, 1, 0)
-        KeyLabel.Position = UDim2.new(0, 12, 0, 0)
-        KeyLabel.BackgroundTransparency = 1
-        KeyLabel.Text = keyData.name
-        KeyLabel.Font = Enum.Font.GothamSemibold
-        KeyLabel.TextSize = 14
-        KeyLabel.TextColor3 = CurrentTheme.Text
-        KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
-        KeyLabel.Parent = KeyBtn
-        
-        local KeyCheck = Instance.new("TextLabel")
-        KeyCheck.Size = UDim2.new(0, 30, 0, 30)
-        KeyCheck.Position = UDim2.new(1, -38, 0.5, 0)
-        KeyCheck.AnchorPoint = Vector2.new(0, 0.5)
-        KeyCheck.BackgroundColor3 = CurrentTheme.Sidebar
-        KeyCheck.BorderSizePixel = 0
-        KeyCheck.Text = TugaHub.Settings.ToggleKey == keyData.key and "✓" or ""
-        KeyCheck.Font = Enum.Font.GothamBold
-        KeyCheck.TextSize = 18
-        KeyCheck.TextColor3 = CurrentTheme.Success
-        KeyCheck.Parent = KeyBtn
-        
-        CreateCorner(KeyCheck, 8)
-        
-        KeyBtn.MouseEnter:Connect(function()
-            Tween(KeyBtn, {BackgroundColor3 = CurrentTheme.Sidebar}, 0.2)
-        end)
-        
-        KeyBtn.MouseLeave:Connect(function()
-            Tween(KeyBtn, {BackgroundColor3 = CurrentTheme.Background}, 0.2)
-        end)
-        
-        KeyBtn.MouseButton1Click:Connect(function()
-            TugaHub.Settings.ToggleKey = keyData.key
-            
-            for _, otherBtn in ipairs(ConfigScroll:GetChildren()) do
-                if otherBtn:IsA("TextButton") and otherBtn:FindFirstChild("TextLabel") then
-                    local check = otherBtn:FindFirstChildOfClass("TextLabel")
-                    if check and check.Name ~= "TextLabel" then
-                        check.Text = ""
-                    end
-                end
-            end
-            
-            KeyCheck.Text = "✓"
-            
-            Window:Notify({
-                Title = "Tecla Alterada",
-                Description = "Use " .. keyData.name .. " para abrir/fechar o hub",
-                Duration = 3
-            })
-        end)
-    end
-    
-    -- Credits
-    local Credits = Instance.new("TextLabel")
-    Credits.Size = UDim2.new(1, 0, 0, 60)
-    Credits.BackgroundColor3 = CurrentTheme.Background
-    Credits.BorderSizePixel = 0
-    Credits.Text = "✨ by Portuga_MTA ✨\nTugaHub v" .. TugaHub.Version
-    Credits.Font = Enum.Font.GothamBold
-    Credits.TextSize = 13
-    Credits.TextColor3 = CurrentTheme.Primary
-    Credits.Parent = ConfigScroll
-    
-    CreateCorner(Credits, 8)
-    
-    return ConfigPanel
-end
-
 -- Create Main GUI
 local function CreateMainGUI(config)
     local ScreenGui = Instance.new("ScreenGui")
@@ -504,6 +207,57 @@ local function CreateMainGUI(config)
     else
         ScreenGui.Parent = CoreGui
     end
+    
+    -- Toggle Button (Minimized State)
+    local ToggleButton = Instance.new("TextButton")
+    ToggleButton.Name = "ToggleButton"
+    ToggleButton.Size = UDim2.new(0, 50, 0, 50)
+    ToggleButton.Position = UDim2.new(0, 20, 0.5, -25)
+    ToggleButton.BackgroundColor3 = CurrentTheme.Primary
+    ToggleButton.BorderSizePixel = 0
+    ToggleButton.Text = ""
+    ToggleButton.Visible = false
+    ToggleButton.AutoButtonColor = false
+    ToggleButton.Parent = ScreenGui
+    
+    CreateCorner(ToggleButton, 12)
+    CreateStroke(ToggleButton, CurrentTheme.Border, 2)
+    
+    local ToggleIcon = Instance.new("TextLabel")
+    ToggleIcon.Size = UDim2.new(1, 0, 1, 0)
+    ToggleIcon.BackgroundTransparency = 1
+    ToggleIcon.Text = "T"
+    ToggleIcon.Font = Enum.Font.GothamBlack
+    ToggleIcon.TextSize = 28
+    ToggleIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleIcon.Parent = ToggleButton
+    
+    -- Shadow for toggle button
+    local ToggleShadow = Instance.new("ImageLabel")
+    ToggleShadow.Name = "Shadow"
+    ToggleShadow.Size = UDim2.new(1, 20, 1, 20)
+    ToggleShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    ToggleShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+    ToggleShadow.BackgroundTransparency = 1
+    ToggleShadow.Image = "rbxassetid://1316045217"
+    ToggleShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    ToggleShadow.ImageTransparency = 0.5
+    ToggleShadow.ScaleType = Enum.ScaleType.Slice
+    ToggleShadow.SliceCenter = Rect.new(10, 10, 118, 118)
+    ToggleShadow.ZIndex = -1
+    ToggleShadow.Parent = ToggleButton
+    
+    MakeDraggable(ToggleButton)
+    
+    -- Pulse animation for toggle button
+    task.spawn(function()
+        while ToggleButton.Parent do
+            Tween(ToggleButton, {Size = UDim2.new(0, 55, 0, 55)}, 0.8, Enum.EasingStyle.Sine)
+            task.wait(0.8)
+            Tween(ToggleButton, {Size = UDim2.new(0, 50, 0, 50)}, 0.8, Enum.EasingStyle.Sine)
+            task.wait(0.8)
+        end
+    end)
     
     -- Main Container
     local Main = Instance.new("Frame")
@@ -589,7 +343,7 @@ local function CreateMainGUI(config)
     Subtitle.Size = UDim2.new(1, 0, 0, 12)
     Subtitle.Position = UDim2.new(0, 0, 1, -14)
     Subtitle.BackgroundTransparency = 1
-    Subtitle.Text = "by Portuga_MTA • v" .. TugaHub.Version
+    Subtitle.Text = "v" .. TugaHub.Version
     Subtitle.Font = Enum.Font.Gotham
     Subtitle.TextSize = 10
     Subtitle.TextColor3 = CurrentTheme.TextDim
@@ -599,8 +353,8 @@ local function CreateMainGUI(config)
     -- Controls
     local Controls = Instance.new("Frame")
     Controls.Name = "Controls"
-    Controls.Size = UDim2.new(0, 112, 0, 32)
-    Controls.Position = UDim2.new(1, -120, 0.5, 0)
+    Controls.Size = UDim2.new(0, 110, 0, 32)
+    Controls.Position = UDim2.new(1, -118, 0.5, 0)
     Controls.AnchorPoint = Vector2.new(0, 0.5)
     Controls.BackgroundTransparency = 1
     Controls.Parent = Topbar
@@ -611,7 +365,7 @@ local function CreateMainGUI(config)
     ControlsLayout.Padding = UDim.new(0, 6)
     ControlsLayout.Parent = Controls
     
-    local function CreateControlBtn(icon, callback)
+    local function CreateControlBtn(icon, callback, hoverColor)
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(0, 32, 0, 32)
         btn.BackgroundColor3 = CurrentTheme.Sidebar
@@ -626,7 +380,7 @@ local function CreateMainGUI(config)
         CreateCorner(btn, 8)
         
         btn.MouseEnter:Connect(function()
-            Tween(btn, {BackgroundColor3 = CurrentTheme.Primary, TextColor3 = CurrentTheme.Text}, 0.2)
+            Tween(btn, {BackgroundColor3 = hoverColor or CurrentTheme.Primary, TextColor3 = CurrentTheme.Text}, 0.2)
         end)
         
         btn.MouseLeave:Connect(function()
@@ -638,36 +392,42 @@ local function CreateMainGUI(config)
         return btn
     end
     
-    local MiniUI = CreateMinimizedUI(ScreenGui, Main)
+    -- Theme Selector (Will be created after window initialization)
+    local ThemeBtn = CreateControlBtn("🎨", function() end, CurrentTheme.Secondary)
     
-    local ConfigBtn = CreateControlBtn("⚙", function()
-        local ConfigPanel = Main:FindFirstChild("ConfigPanel")
-        if ConfigPanel then
-            if ConfigPanel.Visible then
-                Tween(ConfigPanel, {Size = UDim2.new(0, 0, 1, -58)}, 0.3)
-                task.wait(0.3)
-                ConfigPanel.Visible = false
-            else
-                ConfigPanel.Visible = true
-                Tween(ConfigPanel, {Size = UDim2.new(0, 280, 1, -58)}, 0.3, Enum.EasingStyle.Back)
-            end
-        end
+    -- Hide Button
+    local HideBtn = CreateControlBtn("−", function()
+        -- Hide animation
+        Tween(Main, {Size = UDim2.new(0, 0, 0, 0), Rotation = -90}, 0.4, Enum.EasingStyle.Back)
+        task.wait(0.4)
+        Main.Visible = false
+        ToggleButton.Visible = true
+        Tween(ToggleButton, {Size = UDim2.new(0, 50, 0, 50)}, 0.3, Enum.EasingStyle.Back)
     end)
     
-    local minimized = false
-    local MinBtn = CreateControlBtn("−", function()
-        minimized = not minimized
-        if minimized then
-            Tween(Main, {Size = UDim2.new(0, 680, 0, 50)}, 0.3, Enum.EasingStyle.Back)
-        else
-            Tween(Main, {Size = UDim2.new(0, 680, 0, 480)}, 0.3, Enum.EasingStyle.Back)
-        end
-    end)
-    
+    -- Close Button
     local CloseBtn = CreateControlBtn("×", function()
         Tween(Main, {Size = UDim2.new(0, 0, 0, 0), Rotation = 90}, 0.4, Enum.EasingStyle.Back)
+        Tween(ToggleButton, {Size = UDim2.new(0, 0, 0, 0)}, 0.3, Enum.EasingStyle.Back)
         task.wait(0.4)
         ScreenGui:Destroy()
+    end, CurrentTheme.Error)
+    
+    -- Toggle Button Click
+    ToggleButton.MouseButton1Click:Connect(function()
+        ToggleButton.Visible = false
+        Main.Visible = true
+        Main.Size = UDim2.new(0, 0, 0, 0)
+        Main.Rotation = 90
+        Tween(Main, {Size = UDim2.new(0, 680, 0, 480), Rotation = 0}, 0.5, Enum.EasingStyle.Back)
+    end)
+    
+    ToggleButton.MouseEnter:Connect(function()
+        Tween(ToggleButton, {BackgroundColor3 = CurrentTheme.Accent}, 0.2)
+    end)
+    
+    ToggleButton.MouseLeave:Connect(function()
+        Tween(ToggleButton, {BackgroundColor3 = CurrentTheme.Primary}, 0.2)
     end)
     
     -- Sidebar
@@ -752,7 +512,159 @@ local function CreateMainGUI(config)
     
     MakeDraggable(Main, Topbar)
     
-    return ScreenGui, Main, TabContainer, Content, SearchInput
+    return ScreenGui, Main, TabContainer, Content, SearchInput, ThemeBtn, ToggleButton
+end
+
+-- Create Theme Selector
+local function CreateThemeSelector(GUI, ThemeBtn, windowRef)
+    local ThemeFrame = Instance.new("Frame")
+    ThemeFrame.Name = "ThemeSelector"
+    ThemeFrame.Size = UDim2.new(0, 0, 0, 0)
+    ThemeFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    ThemeFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    ThemeFrame.BackgroundColor3 = CurrentTheme.Surface
+    ThemeFrame.BorderSizePixel = 0
+    ThemeFrame.Visible = false
+    ThemeFrame.ZIndex = 1000
+    ThemeFrame.Parent = GUI
+    
+    CreateCorner(ThemeFrame, 12)
+    CreateStroke(ThemeFrame, CurrentTheme.Border, 2)
+    
+    local ThemeShadow = Instance.new("ImageLabel")
+    ThemeShadow.Size = UDim2.new(1, 30, 1, 30)
+    ThemeShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    ThemeShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+    ThemeShadow.BackgroundTransparency = 1
+    ThemeShadow.Image = "rbxassetid://1316045217"
+    ThemeShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    ThemeShadow.ImageTransparency = 0.5
+    ThemeShadow.ScaleType = Enum.ScaleType.Slice
+    ThemeShadow.SliceCenter = Rect.new(10, 10, 118, 118)
+    ThemeShadow.ZIndex = 999
+    ThemeShadow.Parent = ThemeFrame
+    
+    local ThemeTitle = Instance.new("TextLabel")
+    ThemeTitle.Size = UDim2.new(1, -20, 0, 40)
+    ThemeTitle.Position = UDim2.new(0, 10, 0, 10)
+    ThemeTitle.BackgroundTransparency = 1
+    ThemeTitle.Text = "🎨 Selecionar Tema"
+    ThemeTitle.Font = Enum.Font.GothamBold
+    ThemeTitle.TextSize = 16
+    ThemeTitle.TextColor3 = CurrentTheme.Text
+    ThemeTitle.TextXAlignment = Enum.TextXAlignment.Left
+    ThemeTitle.Parent = ThemeFrame
+    
+    local ThemeContainer = Instance.new("ScrollingFrame")
+    ThemeContainer.Size = UDim2.new(1, -20, 1, -90)
+    ThemeContainer.Position = UDim2.new(0, 10, 0, 50)
+    ThemeContainer.BackgroundTransparency = 1
+    ThemeContainer.BorderSizePixel = 0
+    ThemeContainer.ScrollBarThickness = 4
+    ThemeContainer.ScrollBarImageColor3 = CurrentTheme.Primary
+    ThemeContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+    ThemeContainer.Parent = ThemeFrame
+    
+    local ThemeLayout = Instance.new("UIListLayout")
+    ThemeLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ThemeLayout.Padding = UDim.new(0, 8)
+    ThemeLayout.Parent = ThemeContainer
+    
+    ThemeLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        ThemeContainer.CanvasSize = UDim2.new(0, 0, 0, ThemeLayout.AbsoluteContentSize.Y + 10)
+    end)
+    
+    -- Create theme options
+    for themeName, theme in pairs(TugaHub.Themes) do
+        local ThemeOption = Instance.new("TextButton")
+        ThemeOption.Size = UDim2.new(1, 0, 0, 50)
+        ThemeOption.BackgroundColor3 = CurrentTheme.Background
+        ThemeOption.BorderSizePixel = 0
+        ThemeOption.Text = ""
+        ThemeOption.AutoButtonColor = false
+        ThemeOption.Parent = ThemeContainer
+        
+        CreateCorner(ThemeOption, 8)
+        CreateStroke(ThemeOption, CurrentTheme.Border, 1, 0.5)
+        
+        local ColorPreview = Instance.new("Frame")
+        ColorPreview.Size = UDim2.new(0, 35, 0, 35)
+        ColorPreview.Position = UDim2.new(0, 8, 0.5, 0)
+        ColorPreview.AnchorPoint = Vector2.new(0, 0.5)
+        ColorPreview.BackgroundColor3 = theme.Primary
+        ColorPreview.BorderSizePixel = 0
+        ColorPreview.Parent = ThemeOption
+        
+        CreateCorner(ColorPreview, 8)
+        
+        local ThemeLabel = Instance.new("TextLabel")
+        ThemeLabel.Size = UDim2.new(1, -55, 1, 0)
+        ThemeLabel.Position = UDim2.new(0, 50, 0, 0)
+        ThemeLabel.BackgroundTransparency = 1
+        ThemeLabel.Text = theme.Name
+        ThemeLabel.Font = Enum.Font.GothamSemibold
+        ThemeLabel.TextSize = 14
+        ThemeLabel.TextColor3 = CurrentTheme.Text
+        ThemeLabel.TextXAlignment = Enum.TextXAlignment.Left
+        ThemeLabel.Parent = ThemeOption
+        
+        ThemeOption.MouseEnter:Connect(function()
+            Tween(ThemeOption, {BackgroundColor3 = CurrentTheme.Sidebar}, 0.2)
+        end)
+        
+        ThemeOption.MouseLeave:Connect(function()
+            Tween(ThemeOption, {BackgroundColor3 = CurrentTheme.Background}, 0.2)
+        end)
+        
+        ThemeOption.MouseButton1Click:Connect(function()
+            -- Apply theme
+            if windowRef then
+                windowRef:SetTheme(themeName)
+            end
+            
+            -- Close selector
+            Tween(ThemeFrame, {Size = UDim2.new(0, 0, 0, 0)}, 0.3, Enum.EasingStyle.Back)
+            task.wait(0.3)
+            ThemeFrame.Visible = false
+        end)
+    end
+    
+    local CloseThemeBtn = Instance.new("TextButton")
+    CloseThemeBtn.Size = UDim2.new(1, -20, 0, 35)
+    CloseThemeBtn.Position = UDim2.new(0, 10, 1, -45)
+    CloseThemeBtn.BackgroundColor3 = CurrentTheme.Error
+    CloseThemeBtn.BorderSizePixel = 0
+    CloseThemeBtn.Text = "Fechar"
+    CloseThemeBtn.Font = Enum.Font.GothamBold
+    CloseThemeBtn.TextSize = 14
+    CloseThemeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseThemeBtn.AutoButtonColor = false
+    CloseThemeBtn.Parent = ThemeFrame
+    
+    CreateCorner(CloseThemeBtn, 8)
+    
+    CloseThemeBtn.MouseButton1Click:Connect(function()
+        Tween(ThemeFrame, {Size = UDim2.new(0, 0, 0, 0)}, 0.3, Enum.EasingStyle.Back)
+        task.wait(0.3)
+        ThemeFrame.Visible = false
+    end)
+    
+    CloseThemeBtn.MouseEnter:Connect(function()
+        Tween(CloseThemeBtn, {BackgroundColor3 = Color3.fromRGB(200, 50, 50)}, 0.2)
+    end)
+    
+    CloseThemeBtn.MouseLeave:Connect(function()
+        Tween(CloseThemeBtn, {BackgroundColor3 = CurrentTheme.Error}, 0.2)
+    end)
+    
+    -- Theme button click
+    ThemeBtn.MouseButton1Click:Connect(function()
+        ThemeFrame.Visible = true
+        ThemeFrame.Size = UDim2.new(0, 0, 0, 0)
+        Tween(ThemeFrame, {Size = UDim2.new(0, 350, 0, 400)}, 0.4, Enum.EasingStyle.Back)
+    end)
+    
+    return ThemeFrame
 end
 
 -- Create Window
@@ -764,7 +676,22 @@ function TugaHub:CreateWindow(config)
     
     CurrentTheme = TugaHub.Themes[config.Theme] or TugaHub.Themes.Portugal
     
-    local GUI, Main, TabContainer, Content, SearchInput = CreateMainGUI(config)
+    local GUI, Main, TabContainer, Content, SearchInput, ThemeBtn, ToggleButton = CreateMainGUI(config)
+    
+    local Window = {
+        GUI = GUI,
+        Main = Main,
+        ToggleButton = ToggleButton,
+        Tabs = {},
+        CurrentTab = nil,
+        Elements = {},
+        CurrentThemeName = config.Theme
+    }
+    
+    table.insert(TugaHub.Windows, Window)
+    
+    -- Create theme selector
+    CreateThemeSelector(GUI, ThemeBtn, Window)
     
     -- Loading Animation
     if config.LoadingEnabled then
@@ -781,16 +708,6 @@ function TugaHub:CreateWindow(config)
         task.wait(0.7)
     end
     
-    local Window = {
-        GUI = GUI,
-        Main = Main,
-        Tabs = {},
-        CurrentTab = nil,
-        Elements = {}
-    }
-    
-    table.insert(TugaHub.Windows, Window)
-    
     -- Search Functionality
     SearchInput:GetPropertyChangedSignal("Text"):Connect(function()
         local searchText = SearchInput.Text:lower()
@@ -803,6 +720,90 @@ function TugaHub:CreateWindow(config)
             end
         end
     end)
+    
+    -- Set Theme Function
+    function Window:SetTheme(themeName)
+        local newTheme = TugaHub.Themes[themeName]
+        if not newTheme then
+            warn("TugaHub: Tema '" .. themeName .. "' não encontrado")
+            return
+        end
+        
+        CurrentTheme = newTheme
+        Window.CurrentThemeName = themeName
+        
+        -- Update all UI colors
+        Main.BackgroundColor3 = CurrentTheme.Background
+        Main.UIStroke.Color = CurrentTheme.Border
+        
+        Main.Topbar.BackgroundColor3 = CurrentTheme.Surface
+        Main.Topbar.CornerRepair.BackgroundColor3 = CurrentTheme.Surface
+        Main.Topbar.Logo.BackgroundColor3 = CurrentTheme.Primary
+        Main.Topbar.Title.TextColor3 = CurrentTheme.Text
+        Main.Topbar.Title.Subtitle.TextColor3 = CurrentTheme.TextDim
+        
+        -- Update toggle button
+        ToggleButton.BackgroundColor3 = CurrentTheme.Primary
+        ToggleButton.UIStroke.Color = CurrentTheme.Border
+        
+        -- Update sidebar
+        Main.Sidebar.BackgroundColor3 = CurrentTheme.Sidebar
+        Main.Sidebar.UIStroke.Color = CurrentTheme.Border
+        Main.Sidebar.Search.BackgroundColor3 = CurrentTheme.Background
+        Main.Sidebar.Search.SearchIcon.TextColor3 = CurrentTheme.TextDim
+        Main.Sidebar.Search.SearchInput.TextColor3 = CurrentTheme.Text
+        Main.Sidebar.Search.SearchInput.PlaceholderColor3 = CurrentTheme.TextDim
+        Main.Sidebar.Tabs.ScrollBarImageColor3 = CurrentTheme.Primary
+        
+        -- Update content
+        Main.Content.BackgroundColor3 = CurrentTheme.Surface
+        Main.Content.UIStroke.Color = CurrentTheme.Border
+        
+        -- Update control buttons
+        for _, btn in ipairs(Main.Topbar.Controls:GetChildren()) do
+            if btn:IsA("TextButton") then
+                btn.BackgroundColor3 = CurrentTheme.Sidebar
+                btn.TextColor3 = CurrentTheme.TextDim
+            end
+        end
+        
+        -- Update tabs
+        for _, tab in pairs(Window.Tabs) do
+            if Window.CurrentTab == tab.Name then
+                tab.Button.BackgroundColor3 = CurrentTheme.Background
+                tab.Icon.TextColor3 = CurrentTheme.Primary
+                tab.Label.TextColor3 = CurrentTheme.Text
+            else
+                tab.Button.BackgroundTransparency = 1
+                tab.Icon.TextColor3 = CurrentTheme.TextDim
+                tab.Label.TextColor3 = CurrentTheme.TextDim
+            end
+            
+            -- Update tab content elements
+            for _, element in ipairs(tab.Content:GetChildren()) do
+                if element:IsA("Frame") or element:IsA("ScrollingFrame") then
+                    if element.Name ~= "UIListLayout" then
+                        -- Update element colors based on type
+                        pcall(function()
+                            if element:FindFirstChild("BackgroundColor3") then
+                                element.BackgroundColor3 = CurrentTheme.Background
+                            end
+                            if element:FindFirstChild("UIStroke") then
+                                element.UIStroke.Color = CurrentTheme.Border
+                            end
+                        end)
+                    end
+                end
+            end
+        end
+        
+        -- Success notification
+        Window:Notify({
+            Title = "Tema Alterado",
+            Description = "Tema alterado para " .. newTheme.Name,
+            Duration = 2
+        })
+    end
     
     -- Create Tab
     function Window:CreateTab(name, icon)
@@ -992,7 +993,10 @@ function TugaHub:CreateWindow(config)
                 Tween(Button, {BackgroundColor3 = CurrentTheme.Background}, 0.2)
                 Tween(ButtonLabel, {TextColor3 = CurrentTheme.Text}, 0.2)
                 
-                pcall(config.Callback)
+                local success, err = pcall(config.Callback)
+                if not success then
+                    warn("TugaHub Button Error:", err)
+                end
             end)
             
             return Button
@@ -1068,7 +1072,10 @@ function TugaHub:CreateWindow(config)
                     }, 0.25, Enum.EasingStyle.Back)
                 end
                 
-                pcall(config.Callback, toggled)
+                local success, err = pcall(config.Callback, toggled)
+                if not success then
+                    warn("TugaHub Toggle Error:", err)
+                end
             end
             
             ToggleButton.MouseButton1Click:Connect(function()
@@ -1082,6 +1089,9 @@ function TugaHub:CreateWindow(config)
                 Set = function(value)
                     toggled = value
                     Update()
+                end,
+                Get = function()
+                    return toggled
                 end
             }
         end
@@ -1147,15 +1157,20 @@ function TugaHub:CreateWindow(config)
             CreateCorner(SliderFill, 3)
             
             local dragging = false
+            local currentValue = config.Default
             
             local function Update(input)
                 local pos = math.clamp((input.Position.X - SliderTrack.AbsolutePosition.X) / SliderTrack.AbsoluteSize.X, 0, 1)
                 local value = math.floor(config.Min + (config.Max - config.Min) * pos)
                 
+                currentValue = value
                 Tween(SliderFill, {Size = UDim2.new(pos, 0, 1, 0)}, 0.1)
                 ValueLabel.Text = tostring(value)
                 
-                pcall(config.Callback, value)
+                local success, err = pcall(config.Callback, value)
+                if not success then
+                    warn("TugaHub Slider Error:", err)
+                end
             end
             
             SliderTrack.InputBegan:Connect(function(input)
@@ -1177,7 +1192,24 @@ function TugaHub:CreateWindow(config)
                 end
             end)
             
-            return Slider
+            return {
+                Set = function(value)
+                    value = math.clamp(value, config.Min, config.Max)
+                    local pos = (value - config.Min) / (config.Max - config.Min)
+                    
+                    currentValue = value
+                    Tween(SliderFill, {Size = UDim2.new(pos, 0, 1, 0)}, 0.3)
+                    ValueLabel.Text = tostring(value)
+                    
+                    local success, err = pcall(config.Callback, value)
+                    if not success then
+                        warn("TugaHub Slider Error:", err)
+                    end
+                end,
+                Get = function()
+                    return currentValue
+                end
+            }
         end
         
         -- Dropdown
@@ -1271,7 +1303,10 @@ function TugaHub:CreateWindow(config)
                     Tween(Dropdown, {Size = UDim2.new(1, 0, 0, 45)}, 0.3)
                     Tween(Arrow, {Rotation = 0}, 0.3)
                     
-                    pcall(config.Callback, option)
+                    local success, err = pcall(config.Callback, option)
+                    if not success then
+                        warn("TugaHub Dropdown Error:", err)
+                    end
                 end)
             end
             
@@ -1288,7 +1323,69 @@ function TugaHub:CreateWindow(config)
                 end
             end)
             
-            return Dropdown
+            return {
+                Set = function(value)
+                    if table.find(config.Options, value) then
+                        selected = value
+                        DropLabel.Text = config.Name .. ": " .. value
+                        
+                        local success, err = pcall(config.Callback, value)
+                        if not success then
+                            warn("TugaHub Dropdown Error:", err)
+                        end
+                    end
+                end,
+                Get = function()
+                    return selected
+                end,
+                Refresh = function(newOptions)
+                    config.Options = newOptions
+                    
+                    for _, child in ipairs(OptionsList:GetChildren()) do
+                        if child:IsA("TextButton") then
+                            child:Destroy()
+                        end
+                    end
+                    
+                    for _, option in ipairs(newOptions) do
+                        local OptionBtn = Instance.new("TextButton")
+                        OptionBtn.Size = UDim2.new(1, -8, 0, 32)
+                        OptionBtn.Position = UDim2.new(0, 4, 0, 0)
+                        OptionBtn.BackgroundColor3 = CurrentTheme.Sidebar
+                        OptionBtn.BorderSizePixel = 0
+                        OptionBtn.Text = option
+                        OptionBtn.Font = Enum.Font.Gotham
+                        OptionBtn.TextSize = 13
+                        OptionBtn.TextColor3 = CurrentTheme.Text
+                        OptionBtn.AutoButtonColor = false
+                        OptionBtn.Parent = OptionsList
+                        
+                        CreateCorner(OptionBtn, 6)
+                        
+                        OptionBtn.MouseEnter:Connect(function()
+                            Tween(OptionBtn, {BackgroundColor3 = CurrentTheme.Primary}, 0.2)
+                        end)
+                        
+                        OptionBtn.MouseLeave:Connect(function()
+                            Tween(OptionBtn, {BackgroundColor3 = CurrentTheme.Sidebar}, 0.2)
+                        end)
+                        
+                        OptionBtn.MouseButton1Click:Connect(function()
+                            selected = option
+                            DropLabel.Text = config.Name .. ": " .. option
+                            
+                            isOpen = false
+                            Tween(Dropdown, {Size = UDim2.new(1, 0, 0, 45)}, 0.3)
+                            Tween(Arrow, {Rotation = 0}, 0.3)
+                            
+                            local success, err = pcall(config.Callback, option)
+                            if not success then
+                                warn("TugaHub Dropdown Error:", err)
+                            end
+                        end)
+                    end
+                end
+            }
         end
         
         -- Input
@@ -1344,11 +1441,21 @@ function TugaHub:CreateWindow(config)
             InputBox.FocusLost:Connect(function(enter)
                 Tween(InputBox, {BackgroundColor3 = CurrentTheme.Sidebar}, 0.2)
                 if enter then
-                    pcall(config.Callback, InputBox.Text)
+                    local success, err = pcall(config.Callback, InputBox.Text)
+                    if not success then
+                        warn("TugaHub Input Error:", err)
+                    end
                 end
             end)
             
-            return Input
+            return {
+                Set = function(text)
+                    InputBox.Text = text
+                end,
+                Get = function()
+                    return InputBox.Text
+                end
+            }
         end
         
         -- Label
@@ -1468,10 +1575,28 @@ function TugaHub:CreateWindow(config)
         
         CloseBtn.MouseButton1Click:Connect(Close)
         
+        CloseBtn.MouseEnter:Connect(function()
+            Tween(CloseBtn, {BackgroundColor3 = CurrentTheme.Error}, 0.2)
+        end)
+        
+        CloseBtn.MouseLeave:Connect(function()
+            Tween(CloseBtn, {BackgroundColor3 = CurrentTheme.Background}, 0.2)
+        end)
+        
         task.delay(config.Duration, Close)
     end
     
     return Window
+end
+
+-- Destroy all windows
+function TugaHub:Destroy()
+    for _, window in ipairs(TugaHub.Windows) do
+        if window.GUI then
+            window.GUI:Destroy()
+        end
+    end
+    TugaHub.Windows = {}
 end
 
 return TugaHub

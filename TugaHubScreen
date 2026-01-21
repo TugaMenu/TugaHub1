@@ -286,13 +286,12 @@ end
 local function CreateConfigPanel(ScreenGui, Main, Window)
     local ConfigPanel = Instance.new("Frame")
     ConfigPanel.Name = "ConfigPanel"
-    ConfigPanel.Size = UDim2.new(0, 280, 1, -58)
-    ConfigPanel.Position = UDim2.new(1, -280, 0, 54)
+    ConfigPanel.Size = UDim2.new(0, 350, 1, -58)
+    ConfigPanel.Position = UDim2.new(1, -350, 0, 54)
     ConfigPanel.BackgroundColor3 = CurrentTheme.Surface
     ConfigPanel.BorderSizePixel = 0
     ConfigPanel.ClipsDescendants = true
     ConfigPanel.Visible = false
-    ConfigPanel.ZIndex = 10
     ConfigPanel.Parent = Main
 
     CreateCorner(ConfigPanel, 10)
@@ -382,17 +381,9 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
 
         ThemeBtn.MouseButton1Click:Connect(function()
             CurrentTheme = TugaHub.Themes[themeName]
-
-            -- REAPLICAR TEMA
-            for _, win in pairs(TugaHub.Windows) do
-                win.GUI:Destroy()
-            end
-            TugaHub.Windows = {}
-            TugaHub:CreateWindow({ Name = "TugaHub", Theme = themeName })
-
             Window:Notify({
                 Title = "Tema Alterado",
-                Description = "Tema " .. themeName .. " aplicado!",
+                Description = "Tema " .. themeName .. " aplicado! Reabra o hub para ver as mudanças.",
                 Duration = 3
             })
         end)
@@ -439,12 +430,13 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
         KeyLabel.Parent = KeyBtn
 
         local KeyCheck = Instance.new("TextLabel")
+        KeyCheck.Name = "KeyCheck"
         KeyCheck.Size = UDim2.new(0, 30, 0, 30)
         KeyCheck.Position = UDim2.new(1, -38, 0.5, 0)
         KeyCheck.AnchorPoint = Vector2.new(0, 0.5)
         KeyCheck.BackgroundColor3 = CurrentTheme.Sidebar
         KeyCheck.BorderSizePixel = 0
-        KeyCheck.Text = (TugaHub.Settings.ToggleKey == keyData.key) and "✓" or ""
+        KeyCheck.Text = TugaHub.Settings.ToggleKey == keyData.key and "✓" or ""
         KeyCheck.Font = Enum.Font.GothamBold
         KeyCheck.TextSize = 18
         KeyCheck.TextColor3 = CurrentTheme.Success
@@ -463,11 +455,10 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
         KeyBtn.MouseButton1Click:Connect(function()
             TugaHub.Settings.ToggleKey = keyData.key
 
-            -- Limpar checks
             for _, otherBtn in ipairs(ConfigScroll:GetChildren()) do
                 if otherBtn:IsA("TextButton") then
-                    local check = otherBtn:FindFirstChildWhichIsA("TextLabel", true)
-                    if check and check ~= KeyCheck then
+                    local check = otherBtn:FindFirstChild("KeyCheck")
+                    if check then
                         check.Text = ""
                     end
                 end
@@ -498,19 +489,6 @@ local function CreateConfigPanel(ScreenGui, Main, Window)
 
     return ConfigPanel
 end
-
--- ====== AQUI COMEÇA A PARTE DO BOTÃO DA ENGRENAGEM ======
-local ConfigPanel = CreateConfigPanel(ScreenGui, Main, Window)
-
--- Substitua "GearButton" pelo nome real do seu botão
-local GearButton = Main:WaitForChild("TopBar"):WaitForChild("Gear")
-
-GearButton.MouseButton1Click:Connect(function()
-    ConfigPanel.Visible = not ConfigPanel.Visible
-    if ConfigPanel.Visible then
-        ConfigPanel:BringToFront()
-    end
-end)
 
 -- Create Main GUI
 local function CreateMainGUI(config)

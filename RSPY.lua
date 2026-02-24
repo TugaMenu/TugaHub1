@@ -737,30 +737,98 @@ function getPlayerFromInstance(instance)
     end
 end
 
--- FIX: eventSelect corrigido - seleção e deselecção de remotes funcionando corretamente
+-- FIX: eventSelect força abertura do painel direito sem depender de toggleSideTray
+function forceOpenSidePanel()
+    -- Reseta flags travadas
+    sideClosing = false
+    maximized = false
+
+    if sideClosed then
+        sideClosed = false
+        -- Mostra e anima o painel diretamente, sem wait() que pode travar
+        RightPanel.Visible = true
+        RightPanel.Size = UDim2.fromOffset(0, Background.AbsoluteSize.Y - TopBar.AbsoluteSize.Y)
+
+        local targetW = Background.AbsoluteSize.X - LeftPanel.AbsoluteSize.X
+        local targetH = Background.AbsoluteSize.Y - TopBar.AbsoluteSize.Y
+
+        TweenService:Create(RightPanel, TweenInfo.new(0.3), {
+            Size = UDim2.fromOffset(targetW, targetH)
+        }):Play()
+        TweenService:Create(TopBar, TweenInfo.new(0.3), {
+            Size = UDim2.fromOffset(Background.AbsoluteSize.X, TopBar.AbsoluteSize.Y)
+        }):Play()
+        TweenService:Create(CodeBox, TweenInfo.new(0.3), {
+            Size = UDim2.fromOffset(targetW, targetH - 119)
+        }):Play()
+        TweenService:Create(ScrollingFrame, TweenInfo.new(0.3), {
+            Size = UDim2.fromOffset(targetW, 110),
+            Position = UDim2.fromOffset(0, targetH - 119)
+        }):Play()
+
+        -- Faz os elementos do painel aparecerem
+        spawn(function()
+            task.wait(0.3)
+            for _, v in next, RightPanel:GetDescendants() do
+                if typeof(v) == "Instance" and v:IsA("GuiObject") then
+                    v.Visible = true
+                end
+            end
+            if rightFadeIn then
+                rightFadeIn()
+                rightFadeIn = nil
+            end
+        end)
+    end
+
+    -- Se estava minimizado, reabre também
+    if closed then
+        mainClosing = false
+        closed = false
+        LeftPanel.Visible = true
+        TweenService:Create(LeftPanel, TweenInfo.new(0.3), {
+            Size = UDim2.new(0, 131, 0, 249)
+        }):Play()
+        if remotesFadeIn then
+            spawn(function()
+                task.wait(0.3)
+                remotesFadeIn()
+                remotesFadeIn = nil
+            end)
+        end
+    end
+end
+
 function eventSelect(frame)
+    -- Deseleciona anterior
     if selected and selected.Log then
         if selected.Button then
             spawn(function()
-                TweenService:Create(selected.Button, TweenInfo.new(0.5), {BackgroundColor3 = Color3.fromRGB(0,0,0)}):Play()
+                TweenService:Create(selected.Button, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(0,0,0)}):Play()
             end)
         end
         selected = nil
     end
+
+    -- Encontra o log correspondente ao frame clicado
     for _, v in next, logs do
         if frame == v.Log then
             selected = v
-            break -- FIX: break adicionado para parar ao encontrar o log correto
+            break
         end
     end
+
     if selected and selected.Log then
+        -- Destaca o botão selecionado
         spawn(function()
-            TweenService:Create(selected.Button, TweenInfo.new(0.5), {BackgroundColor3 = Color3.fromRGB(92,126,229)}):Play()
+            TweenService:Create(selected.Button, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(92,126,229)}):Play()
         end)
-        codebox:setRaw(selected.GenScript)
-    end
-    if sideClosed then
-        toggleSideTray()
+        -- Atualiza o codebox
+        if codebox then
+            codebox:setRaw(selected.GenScript or "-- Selecione um remote para ver o script")
+        end
+        -- Força abertura do painel direito
+        forceOpenSidePanel()
     end
 end
 

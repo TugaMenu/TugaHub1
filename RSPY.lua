@@ -936,17 +936,20 @@ function newRemote(remoteType, data)
 
     logs[#logs + 1] = log
 
-    -- FIX: connect agora usa 'blocked' local corretamente
     local connect = Button.MouseButton1Click:Connect(function()
         logthread(running())
+        -- Seleciona e abre painel imediatamente
         eventSelect(RemoteTemplate)
-        log.GenScript = genScript(log.Remote, log.args)
-        if blocked then -- FIX: variável local 'blocked' corretamente referenciada
-            log.GenScript = "-- THIS REMOTE WAS PREVENTED FROM FIRING TO THE SERVER BY SIMPLESPY\n\n" .. log.GenScript
-        end
-        if selected == log and RemoteTemplate then
-            eventSelect(RemoteTemplate)
-        end
+        -- Gera script em background e atualiza codebox ao terminar
+        spawn(function()
+            log.GenScript = genScript(log.Remote, log.args)
+            if blocked then
+                log.GenScript = "-- THIS REMOTE WAS PREVENTED FROM FIRING TO THE SERVER BY SIMPLESPY\n\n" .. log.GenScript
+            end
+            if selected == log and codebox then
+                codebox:setRaw(log.GenScript)
+            end
+        end)
     end)
 
     layoutOrderNum -= 1
@@ -1189,7 +1192,6 @@ function t2s(t, l, p, n, vtv, i, pt, path, tables, tI)
         else
             currentPath = "[" .. v2s(k, l, p, n, vtv, k, t, path .. currentPath, tables, tI) .. "]"
         end
-        if size % 100 == 0 then scheduleWait() end
         s = s .. "\n" .. string.rep(" ", l) .. "[" .. v2s(k, l, p, n, vtv, k, t, path .. currentPath, tables, tI) .. "] = " .. v2s(v, l, p, n, vtv, k, t, path .. currentPath, tables, tI) .. ","
     end
     if #s > 1 then s = s:sub(1, #s - 1) end
@@ -1222,65 +1224,81 @@ function f2s(f)
     return tostring(f)
 end
 
+-- i2p reescrito SEM task.wait() para nao bloquear o jogo
 function i2p(i, customgen)
     if customgen then return customgen end
-    local player = getplayer(i)
-    local parent = i
-    local out = ""
-    if parent == nil then return "nil" end
-    if player then
-        while true do
-            if parent and parent == player.Character then
-                if player == Players.LocalPlayer then
-                    return 'game:GetService("Players").LocalPlayer.Character' .. out
-                else
-                    return i2p(player) .. ".Character" .. out
-                end
-            else
-                if parent.Name:match("[%a_]+[%w+]*") ~= parent.Name then
-                    out = ':FindFirstChild(' .. formatstr(parent.Name) .. ')' .. out
-                else
-                    out = "." .. parent.Name .. out
-                end
-            end
-            task.wait()
-            parent = parent.Parent
-        end
-    elseif parent ~= game then
-        while true do
-            if parent and parent.Parent == game then
-                if game:FindService(parent.ClassName) then
-                    if lower(parent.ClassName) == "workspace" then
-                        return `workspace{out}`
-                    else
-                        return 'game:GetService("' .. parent.ClassName .. '")' .. out
-                    end
-                else
-                    if parent.Name:match("[%a_]+[%w_]*") then
-                        return "game." .. parent.Name .. out
-                    else
-                        return 'game:FindFirstChild(' .. formatstr(parent.Name) .. ')' .. out
-                    end
-                end
-            elseif not parent.Parent then
-                getnilrequired = true
-                return 'getNil(' .. formatstr(parent.Name) .. ', "' .. parent.ClassName .. '")' .. out
-            else
-                if parent.Name:match("[%a_]+[%w_]*") ~= parent.Name then
-                    out = ':WaitForChild(' .. formatstr(parent.Name) .. ')' .. out
-                else
-                    out = ':WaitForChild("' .. parent.Name .. '")' .. out
-                end
-            end
-            if i:IsDescendantOf(Players.LocalPlayer) then
-                return 'game:GetService("Players").LocalPlayer' .. out
-            end
-            parent = parent.Parent
-            task.wait()
-        end
-    else
-        return "game"
+    if i == nil then return "nil" end
+    if i == game then return "game" end
+
+    -- Constrói o caminho do instance subindo pelos parents
+    local parts = {}
+    local current = i
+    local limit = 64 -- evita loop infinito
+
+    for _ = 1, limit do
+        if current == nil then break end
+        if current == game then break end
+        table.insert(parts, 1, current)
+        current = current.Parent
     end
+
+    if #parts == 0 then return "nil" end
+
+    -- Verifica se é descendente de um player
+    local player = getplayer(i)
+
+    local out = ""
+
+    for idx, node in ipairs(parts) do
+        local nodeParent = node.Parent
+
+        if idx == 1 then
+            -- Raiz: decide o ponto de partida
+            if nodeParent == game then
+                if game:FindService(node.ClassName) then
+                    if lower(node.ClassName) == "workspace" then
+                        out = "workspace"
+                    else
+                        out = 'game:GetService("' .. node.ClassName .. '")'
+                    end
+                else
+                    if node.Name:match("^[%a_][%w_]*$") then
+                        out = "game." .. node.Name
+                    else
+                        out = 'game:FindFirstChild("' .. node.Name .. '")'
+                    end
+                end
+            elseif nodeParent == nil then
+                -- nil instance (getNil)
+                getnilrequired = true
+                out = 'getNil("' .. node.Name .. '", "' .. node.ClassName .. '")'
+            elseif player and node == player then
+                if player == Players.LocalPlayer then
+                    out = 'game:GetService("Players").LocalPlayer'
+                else
+                    out = 'game:GetService("Players"):FindFirstChild("' .. player.Name .. '")'
+                end
+            elseif player and node == player.Character then
+                if player == Players.LocalPlayer then
+                    out = 'game:GetService("Players").LocalPlayer.Character'
+                else
+                    out = 'game:GetService("Players"):FindFirstChild("' .. player.Name .. '").Character'
+                end
+            else
+                getnilrequired = true
+                out = 'getNil("' .. node.Name .. '", "' .. node.ClassName .. '")'
+            end
+        else
+            -- Filhos: navega para baixo
+            if node.Name:match("^[%a_][%w_]*$") then
+                out = out .. ':WaitForChild("' .. node.Name .. '")'
+            else
+                out = out .. ':WaitForChild("' .. node.Name .. '")'
+            end
+        end
+    end
+
+    return out
 end
 
 function getplayer(instance)
@@ -1345,49 +1363,51 @@ local specialstrings = {
 }
 
 function handlespecials(s, indentation)
-    local i = 0
-    local n = 1
-    local coroutines = {}
-    local coroutineFunc = function(idx, r)
-        s = s:sub(0, idx - 1) .. r .. s:sub(idx + 1, -1)
+    local maxSize = getgenv().SimpleSpyMaxStringSize or 10000
+    local reachedMax = false
+
+    if #s > maxSize then
+        s = s:sub(1, maxSize)
+        reachedMax = true
     end
-    local timeout = 0
-    repeat
-        i += 1
-        if timeout >= 10 then
-            task.wait()
-            timeout = 0
-        end
+
+    -- Substitui caracteres especiais de forma simples sem coroutines ou waits
+    local result = {}
+    local i = 1
+    local chunkCount = 0
+    local chunkBreak = 100
+
+    while i <= #s do
         local char = s:sub(i, i)
-        if byte(char) then
-            timeout += 1
-            local c = create(coroutineFunc)
-            table.insert(coroutines, c)
-            local specialfunc = specialstrings[char]
-            if specialfunc then
-                specialfunc(c, i)
-                i += 1
-            elseif byte(char) > 126 or byte(char) < 32 then
-                resume(c, i, "\\" .. byte(char))
-                i += #rawtostring(byte(char))
-            end
-            if i >= n * 100 then
-                local extra = string.format('" ..\n%s"', string.rep(" ", indentation + indent))
-                s = s:sub(0, i) .. extra .. s:sub(i + 1, -1)
-                i += #extra
-                n += 1
-            end
+        local b = byte(char)
+
+        if char == '"' then
+            result[#result+1] = '\\"'
+        elseif char == '\\' then
+            result[#result+1] = '\\\\'
+        elseif char == '\n' then
+            result[#result+1] = '\\n'
+        elseif char == '\r' then
+            result[#result+1] = '\\r'
+        elseif char == '\t' then
+            result[#result+1] = '\\t'
+        elseif b and (b < 32 or b > 126) then
+            result[#result+1] = '\\' .. tostring(b)
+        else
+            result[#result+1] = char
         end
-    until char == "" or i > (getgenv().SimpleSpyMaxStringSize or 10000)
-    while not isFinished(coroutines) do
-        RunService.Heartbeat:Wait()
+
+        chunkCount += 1
+        if chunkCount >= chunkBreak then
+            local extra = string.format('" ..\n%s"', string.rep(" ", (indentation or 0) + indent))
+            result[#result+1] = extra
+            chunkCount = 0
+        end
+
+        i += 1
     end
-    clear(coroutines)
-    if i > (getgenv().SimpleSpyMaxStringSize or 10000) then
-        s = string.sub(s, 0, getgenv().SimpleSpyMaxStringSize or 10000)
-        return s, true
-    end
-    return s, false
+
+    return table.concat(result), reachedMax
 end
 
 function getScriptFromSrc(src)
@@ -1775,7 +1795,6 @@ newButton("Function Info", function() return "Click to view calling function inf
         local typeoffunc = typeof(func)
         if typeoffunc ~= 'string' then
             codebox:setRaw("--[[Generating Function Info please wait]]")
-            RunService.Heartbeat:Wait()
             local lclosure = islclosure(func)
             local SourceScript = rawget(getfenv(func), "script")
             local CallingScript = selected.Source or nil
